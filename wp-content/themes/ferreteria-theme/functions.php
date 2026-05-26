@@ -117,3 +117,75 @@ function ferreteria_theme_add_to_cart_text(): string
 }
 add_filter('woocommerce_product_add_to_cart_text', 'ferreteria_theme_add_to_cart_text');
 add_filter('woocommerce_product_single_add_to_cart_text', 'ferreteria_theme_add_to_cart_text');
+
+function ferreteria_theme_simplify_checkout_fields(array $fields): array
+{
+    unset(
+        $fields['billing']['billing_company'],
+        $fields['billing']['billing_address_2'],
+        $fields['shipping']['shipping_company'],
+        $fields['shipping']['shipping_address_2'],
+        $fields['order']['order_comments']
+    );
+
+    $labels = array(
+        'billing_first_name' => 'Nombre',
+        'billing_last_name'  => 'Apellido',
+        'billing_phone'      => 'Teléfono',
+        'billing_email'      => 'Correo electrónico',
+        'billing_address_1'  => 'Dirección',
+        'billing_city'       => 'Localidad',
+        'billing_state'      => 'Provincia',
+        'billing_postcode'   => 'Código postal',
+        'shipping_first_name' => 'Nombre',
+        'shipping_last_name'  => 'Apellido',
+        'shipping_address_1'  => 'Dirección',
+        'shipping_city'       => 'Localidad',
+        'shipping_state'      => 'Provincia',
+        'shipping_postcode'   => 'Código postal',
+    );
+
+    foreach ($labels as $field_key => $label) {
+        foreach (array('billing', 'shipping') as $group) {
+            if (isset($fields[$group][$field_key])) {
+                $fields[$group][$field_key]['label'] = $label;
+            }
+        }
+    }
+
+    foreach (array('billing', 'shipping') as $group) {
+        $country_key  = "{$group}_country";
+        $state_key    = "{$group}_state";
+        $postcode_key = "{$group}_postcode";
+
+        if (isset($fields[$group][$country_key])) {
+            $fields[$group][$country_key]['default'] = 'AR';
+            $fields[$group][$country_key]['class']   = array('form-row-wide', 'hidden');
+        }
+
+        if (isset($fields[$group][$state_key])) {
+            $fields[$group][$state_key]['default'] = 'G';
+        }
+
+        if (isset($fields[$group][$postcode_key])) {
+            $fields[$group][$postcode_key]['required'] = false;
+        }
+    }
+
+    return $fields;
+}
+add_filter('woocommerce_checkout_fields', 'ferreteria_theme_simplify_checkout_fields');
+
+function ferreteria_theme_default_checkout_country(string $value): string
+{
+    return $value ?: 'AR';
+}
+add_filter('default_checkout_billing_country', 'ferreteria_theme_default_checkout_country');
+add_filter('default_checkout_shipping_country', 'ferreteria_theme_default_checkout_country');
+
+function ferreteria_theme_default_checkout_state(string $value): string
+{
+    return $value ?: 'G';
+}
+add_filter('default_checkout_billing_state', 'ferreteria_theme_default_checkout_state');
+add_filter('default_checkout_shipping_state', 'ferreteria_theme_default_checkout_state');
