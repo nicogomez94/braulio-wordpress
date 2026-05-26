@@ -31,9 +31,8 @@ if (! defined('ABSPATH')) {
       <div class="navbar-menu" id="navMenu" role="menu">
         <ul class="navbar-nav">
           <li><a href="<?php echo ferreteria_theme_url('/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('home'))); ?>">Inicio</a></li>
-          <li><a href="<?php echo ferreteria_theme_url('/#categorias'); ?>">Productos</a></li>
-          <li><a href="<?php echo ferreteria_theme_url('/#construcciones'); ?>">Construcciones</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/nosotros/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('nosotros'))); ?>">Nosotros</a></li>
+          <li><a href="<?php echo ferreteria_theme_url('/categorias/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('categorias'))); ?>">Categorías</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/tienda/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('tienda'))); ?>">Tienda</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/carrito/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('carrito'))); ?>">Carrito</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="btn-nav<?php echo esc_attr(ferreteria_theme_is_active('contacto')); ?>">Cotizar</a></li>
@@ -41,4 +40,3 @@ if (! defined('ABSPATH')) {
       </div>
     </div>
   </nav>
-

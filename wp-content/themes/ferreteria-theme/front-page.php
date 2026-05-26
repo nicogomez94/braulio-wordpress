@@ -82,48 +82,7 @@ get_header();
         <p class="section-subtitle">Todo lo que necesitás para tu obra, reforma o proyecto en un solo lugar.</p>
       </div>
 
-      <div class="categories-grid">
-        <a href="<?php echo ferreteria_product_cat_url('herramientas'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-screwdriver-wrench"></i></div>
-          <span class="category-name">Herramientas</span>
-        </a>
-        <a href="<?php echo ferreteria_product_cat_url('pintureria'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-paint-roller"></i></div>
-          <span class="category-name">Pinturería</span>
-        </a>
-        <a href="<?php echo ferreteria_theme_url('/tienda/'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-bolt"></i></div>
-          <span class="category-name">Electricidad</span>
-        </a>
-        <a href="<?php echo ferreteria_product_cat_url('plomeria'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-faucet"></i></div>
-          <span class="category-name">Plomería</span>
-        </a>
-        <a href="<?php echo ferreteria_product_cat_url('herrajes'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-key"></i></div>
-          <span class="category-name">Herrajes</span>
-        </a>
-        <a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-stairs"></i></div>
-          <span class="category-name">Escaleras</span>
-        </a>
-        <a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-door-open"></i></div>
-          <span class="category-name">Aberturas</span>
-        </a>
-        <a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-house-chimney"></i></div>
-          <span class="category-name">Techos</span>
-        </a>
-        <a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-ruler-combined"></i></div>
-          <span class="category-name">Personalizados</span>
-        </a>
-        <a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="category-card fade-in">
-          <div class="category-icon"><i class="fas fa-couch"></i></div>
-          <span class="category-name">Muebles</span>
-        </a>
-      </div>
+      <?php ferreteria_theme_render_categories_grid(); ?>
     </div>
   </section>
 

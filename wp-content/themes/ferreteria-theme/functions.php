@@ -96,6 +96,10 @@ function ferreteria_theme_is_active(string $target): string
         return ' active';
     }
 
+    if ('categorias' === $target && get_query_var('ferreteria_categorias')) {
+        return ' active';
+    }
+
     if (is_page($target)) {
         return ' active';
     }
@@ -117,6 +121,86 @@ function ferreteria_theme_add_to_cart_text(): string
 }
 add_filter('woocommerce_product_add_to_cart_text', 'ferreteria_theme_add_to_cart_text');
 add_filter('woocommerce_product_single_add_to_cart_text', 'ferreteria_theme_add_to_cart_text');
+
+function ferreteria_theme_category_items(): array
+{
+    return array(
+        array('label' => 'Herramientas', 'icon' => 'fa-screwdriver-wrench', 'url' => ferreteria_product_cat_url('herramientas')),
+        array('label' => 'Pinturería', 'icon' => 'fa-paint-roller', 'url' => ferreteria_product_cat_url('pintureria')),
+        array('label' => 'Electricidad', 'icon' => 'fa-bolt', 'url' => ferreteria_theme_url('/tienda/')),
+        array('label' => 'Plomería', 'icon' => 'fa-faucet', 'url' => ferreteria_product_cat_url('plomeria')),
+        array('label' => 'Herrajes', 'icon' => 'fa-key', 'url' => ferreteria_product_cat_url('herrajes')),
+        array('label' => 'Escaleras', 'icon' => 'fa-stairs', 'url' => ferreteria_theme_url('/contacto/')),
+        array('label' => 'Aberturas', 'icon' => 'fa-door-open', 'url' => ferreteria_theme_url('/contacto/')),
+        array('label' => 'Techos', 'icon' => 'fa-house-chimney', 'url' => ferreteria_theme_url('/contacto/')),
+        array('label' => 'Personalizados', 'icon' => 'fa-ruler-combined', 'url' => ferreteria_theme_url('/contacto/')),
+        array('label' => 'Muebles', 'icon' => 'fa-couch', 'url' => ferreteria_theme_url('/contacto/')),
+    );
+}
+
+function ferreteria_theme_render_categories_grid(): void
+{
+    echo '<div class="categories-grid">';
+
+    foreach (ferreteria_theme_category_items() as $category) {
+        printf(
+            '<a href="%1$s" class="category-card fade-in"><div class="category-icon"><i class="fas %2$s"></i></div><span class="category-name">%3$s</span></a>',
+            esc_url($category['url']),
+            esc_attr($category['icon']),
+            esc_html($category['label'])
+        );
+    }
+
+    echo '</div>';
+}
+
+function ferreteria_theme_add_query_vars(array $vars): array
+{
+    $vars[] = 'ferreteria_categorias';
+    return $vars;
+}
+add_filter('query_vars', 'ferreteria_theme_add_query_vars');
+
+function ferreteria_theme_add_rewrite_rules(): void
+{
+    add_rewrite_rule('^categorias/?$', 'index.php?ferreteria_categorias=1', 'top');
+}
+add_action('init', 'ferreteria_theme_add_rewrite_rules');
+
+function ferreteria_theme_template_include(string $template): string
+{
+    if (get_query_var('ferreteria_categorias')) {
+        $custom_template = get_template_directory() . '/page-categorias.php';
+
+        if (file_exists($custom_template)) {
+            return $custom_template;
+        }
+    }
+
+    return $template;
+}
+add_filter('template_include', 'ferreteria_theme_template_include');
+
+function ferreteria_theme_flush_rewrite_rules(): void
+{
+    ferreteria_theme_add_rewrite_rules();
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'ferreteria_theme_flush_rewrite_rules');
+
+function ferreteria_theme_maybe_flush_rewrite_rules(): void
+{
+    $rewrite_version = '2026-05-26-categorias';
+
+    if (get_option('ferreteria_theme_rewrite_version') === $rewrite_version) {
+        return;
+    }
+
+    ferreteria_theme_add_rewrite_rules();
+    flush_rewrite_rules();
+    update_option('ferreteria_theme_rewrite_version', $rewrite_version);
+}
+add_action('init', 'ferreteria_theme_maybe_flush_rewrite_rules', 20);
 
 function ferreteria_theme_simplify_checkout_fields(array $fields): array
 {
