@@ -1,0 +1,43 @@
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Configuracion local y secretos
+.env
+.env.*
+wp-config.php
+local-xdebuginfo.php
+
+# WordPress: contenido generado en local
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/backup*/
+wp-content/backups/
+wp-content/ai1wm-backups/
+wp-content/updraft/
+wp-content/wflogs/
+wp-content/debug.log
+wp-content/*.log
+
+# Idiomas descargados por WordPress/WooCommerce
+wp-content/languages/
+
+# Logs y temporales
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+
+# Dependencias locales
+node_modules/
+
+# Notas temporales de Codex
+codex-*.md
