@@ -37,10 +37,7 @@ if (! defined('ABSPATH')) {
         <div>
           <p class="footer-col-title">Ubicación</p>
           <p class="footer-addr">
-            Colectora de circunvalación<br>
-            B° Industria<br>
-            entre Rodríguez y Viamonte<br>
-            Santiago del Estero
+            <?php echo nl2br(esc_html(get_option('ms_direccion', 'Colectora de circunvalación, B° Industria, entre Rodríguez y Viamonte, Santiago del Estero'))); ?>
           </p>
         </div>
       </div>

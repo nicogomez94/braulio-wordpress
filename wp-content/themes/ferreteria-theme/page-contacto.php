@@ -46,11 +46,7 @@ get_header();
               <div class="contact-item-icon"><i class="fas fa-location-dot"></i></div>
               <div class="contact-item-body">
                 <h4>Dirección</h4>
-                <p>
-                  Colectora de circunvalación B° Industria<br>
-                  entre Rodríguez y Viamonte<br>
-                  Santiago del Estero
-                </p>
+                <p><?php echo nl2br(esc_html(get_option('ms_direccion', 'Colectora de circunvalación B° Industria, entre Rodríguez y Viamonte, Santiago del Estero'))); ?></p>
               </div>
             </div>
 
@@ -62,7 +58,7 @@ get_header();
                   <?php echo esc_html(get_option('ms_whatsapp', '+54 9 385 XXX-XXXX')); ?>
                 </a>
                 <p style="font-size:.82rem;color:var(--color-text-muted);margin-top:.25rem;">
-                  Lunes a sábados de 8 a 18 hs
+                  <?php echo esc_html(get_option('ms_horario', 'Lunes a sábados de 8 a 18 hs')); ?>
                 </p>
               </div>
             </div>

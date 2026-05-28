@@ -444,6 +444,16 @@ function ferreteria_contact_options_init(): void
         'sanitize_callback' => 'esc_url_raw',
         'default'           => '',
     ));
+    register_setting('ferreteria_contacto', 'ms_direccion', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'default'           => '',
+    ));
+    register_setting('ferreteria_contacto', 'ms_horario', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_text_field',
+        'default'           => '',
+    ));
 }
 add_action('admin_init', 'ferreteria_contact_options_init');
 
@@ -476,6 +486,18 @@ function ferreteria_contact_options_render(): void
                     <th><label for="ms_instagram">Instagram (URL)</label></th>
                     <td>
                         <input type="url" id="ms_instagram" name="ms_instagram" value="<?php echo esc_attr(get_option('ms_instagram')); ?>" class="regular-text" placeholder="https://instagram.com/usuario">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ms_direccion">Dirección</label></th>
+                    <td>
+                        <textarea id="ms_direccion" name="ms_direccion" class="regular-text" rows="3" placeholder="Calle, barrio, ciudad"><?php echo esc_textarea(get_option('ms_direccion')); ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ms_horario">Horario de atención</label></th>
+                    <td>
+                        <input type="text" id="ms_horario" name="ms_horario" value="<?php echo esc_attr(get_option('ms_horario')); ?>" class="regular-text" placeholder="Lunes a sábados de 8 a 18 hs">
                     </td>
                 </tr>
             </table>
