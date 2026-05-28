@@ -127,32 +127,154 @@ function ferreteria_theme_add_to_cart_text(): string
 add_filter('woocommerce_product_add_to_cart_text', 'ferreteria_theme_add_to_cart_text');
 add_filter('woocommerce_product_single_add_to_cart_text', 'ferreteria_theme_add_to_cart_text');
 
-function ferreteria_theme_category_items(): array
-{
-    return array(
-        array('label' => 'Herramientas', 'icon' => 'fa-screwdriver-wrench', 'url' => ferreteria_product_cat_url('herramientas')),
-        array('label' => 'Pinturería', 'icon' => 'fa-paint-roller', 'url' => ferreteria_product_cat_url('pintureria')),
-        array('label' => 'Electricidad', 'icon' => 'fa-bolt', 'url' => ferreteria_theme_url('/tienda/')),
-        array('label' => 'Plomería', 'icon' => 'fa-faucet', 'url' => ferreteria_product_cat_url('plomeria')),
-        array('label' => 'Herrajes', 'icon' => 'fa-key', 'url' => ferreteria_product_cat_url('herrajes')),
-        array('label' => 'Escaleras', 'icon' => 'fa-stairs', 'url' => ferreteria_theme_url('/contacto/')),
-        array('label' => 'Aberturas', 'icon' => 'fa-door-open', 'url' => ferreteria_theme_url('/contacto/')),
-        array('label' => 'Techos', 'icon' => 'fa-house-chimney', 'url' => ferreteria_theme_url('/contacto/')),
-        array('label' => 'Personalizados', 'icon' => 'fa-ruler-combined', 'url' => ferreteria_theme_url('/contacto/')),
-        array('label' => 'Muebles', 'icon' => 'fa-couch', 'url' => ferreteria_theme_url('/contacto/')),
-    );
-}
+// ──────────────────────────────────────────────────────────────────────────────
+// Ícono por categoría — campo en el admin (sin plugins, solo term meta)
+// ──────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Campo en el formulario «Añadir categoría».
+ */
+function ferreteria_category_icon_add_field(): void
+{
+    ?>
+    <div class="form-field">
+        <label for="ferreteria_category_icon"><?php esc_html_e('Ícono (Font Awesome)', 'ferreteria-theme'); ?></label>
+        <input type="text" name="ferreteria_category_icon" id="ferreteria_category_icon" value="" placeholder="fa-tag">
+        <p class="description">
+            <?php esc_html_e('Clase de Font Awesome, ej: fa-bolt, fa-faucet, fa-key.', 'ferreteria-theme'); ?>
+            <a href="https://fontawesome.com/icons" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Ver íconos', 'ferreteria-theme'); ?></a>
+        </p>
+    </div>
+    <?php
+}
+add_action('product_cat_add_form_fields', 'ferreteria_category_icon_add_field');
+
+/**
+ * Campo en el formulario «Editar categoría».
+ */
+function ferreteria_category_icon_edit_field(WP_Term $term): void
+{
+    $icon = get_term_meta($term->term_id, 'ferreteria_category_icon', true);
+    ?>
+    <tr class="form-field">
+        <th scope="row">
+            <label for="ferreteria_category_icon"><?php esc_html_e('Ícono (Font Awesome)', 'ferreteria-theme'); ?></label>
+        </th>
+        <td>
+            <input type="text" name="ferreteria_category_icon" id="ferreteria_category_icon"
+                   value="<?php echo esc_attr($icon); ?>" placeholder="fa-tag">
+            <p class="description">
+                <?php esc_html_e('Clase de Font Awesome, ej: fa-bolt, fa-faucet, fa-key.', 'ferreteria-theme'); ?>
+                <a href="https://fontawesome.com/icons" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Ver íconos', 'ferreteria-theme'); ?></a>
+            </p>
+        </td>
+    </tr>
+    <?php
+}
+add_action('product_cat_edit_form_fields', 'ferreteria_category_icon_edit_field');
+
+/**
+ * Guarda el ícono al crear o editar una categoría.
+ * Solo acepta el formato fa-[a-z0-9-] para evitar inyección de clases arbitrarias.
+ */
+function ferreteria_save_category_icon(int $term_id): void
+{
+    if (! isset($_POST['ferreteria_category_icon'])) {
+        return;
+    }
+
+    $icon = sanitize_text_field(wp_unslash($_POST['ferreteria_category_icon']));
+
+    // Permitir string vacío (borrar ícono) o un fa-class válido.
+    if ('' === $icon || preg_match('/^fa-[a-z0-9\-]+$/', $icon)) {
+        update_term_meta($term_id, 'ferreteria_category_icon', $icon);
+    }
+}
+add_action('created_product_cat', 'ferreteria_save_category_icon');
+add_action('edited_product_cat', 'ferreteria_save_category_icon');
+
+/**
+ * Migración silenciosa: asigna íconos a las categorías existentes la primera vez.
+ * No sobreescribe si el cliente ya editó el campo manualmente.
+ */
+function ferreteria_migrate_category_icons(): void
+{
+    $version = '2026-05-28-icons-v1';
+
+    if (get_option('ferreteria_icons_version') === $version) {
+        return;
+    }
+
+    $icon_map = array(
+        'herramientas'   => 'fa-screwdriver-wrench',
+        'pintureria'     => 'fa-paint-roller',
+        'electricidad'   => 'fa-bolt',
+        'plomeria'       => 'fa-faucet',
+        'herrajes'       => 'fa-key',
+        'escaleras'      => 'fa-stairs',
+        'aberturas'      => 'fa-door-open',
+        'techos'         => 'fa-house-chimney',
+        'personalizados' => 'fa-ruler-combined',
+        'muebles'        => 'fa-couch',
+    );
+
+    foreach ($icon_map as $slug => $icon) {
+        $term = get_term_by('slug', $slug, 'product_cat');
+
+        if ($term && ! is_wp_error($term)) {
+            $existing = get_term_meta($term->term_id, 'ferreteria_category_icon', true);
+
+            if (empty($existing)) {
+                update_term_meta($term->term_id, 'ferreteria_category_icon', $icon);
+            }
+        }
+    }
+
+    update_option('ferreteria_icons_version', $version);
+}
+add_action('init', 'ferreteria_migrate_category_icons', 15);
+
+/**
+ * Renderiza la grilla de categorías leyendo dinámicamente de WooCommerce.
+ * Usa el ícono guardado en term meta; si no hay, muestra fa-tag como fallback.
+ */
 function ferreteria_theme_render_categories_grid(): void
 {
+    $categories = get_terms(array(
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => false,
+        'parent'     => 0,
+        'orderby'    => 'menu_order',
+        'order'      => 'ASC',
+    ));
+
+    if (is_wp_error($categories) || empty($categories)) {
+        return;
+    }
+
     echo '<div class="categories-grid">';
 
-    foreach (ferreteria_theme_category_items() as $category) {
+    foreach ($categories as $cat) {
+        // Omitir la categoría por defecto «sin categoría» de WooCommerce.
+        if ((int) $cat->term_id === (int) get_option('default_product_cat') || 'uncategorized' === $cat->slug) {
+            continue;
+        }
+
+        $icon = get_term_meta($cat->term_id, 'ferreteria_category_icon', true);
+        if (empty($icon)) {
+            $icon = 'fa-tag'; // fallback para categorías sin ícono asignado
+        }
+
+        $url = get_term_link($cat, 'product_cat');
+        if (is_wp_error($url)) {
+            $url = ferreteria_theme_url('/tienda/');
+        }
+
         printf(
             '<a href="%1$s" class="category-card fade-in"><div class="category-icon"><i class="fas %2$s"></i></div><span class="category-name">%3$s</span></a>',
-            esc_url($category['url']),
-            esc_attr($category['icon']),
-            esc_html($category['label'])
+            esc_url($url),
+            esc_attr($icon),
+            esc_html($cat->name)
         );
     }
 
