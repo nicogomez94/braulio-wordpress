@@ -58,20 +58,45 @@ if (contactForm) {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando…';
     btn.disabled  = true;
 
-    // Simulación — reemplazar por lógica real (wp-mail, API, etc.)
-    setTimeout(() => {
-      btn.innerHTML = '<i class="fas fa-circle-check"></i> ¡Mensaje enviado!';
-      btn.style.background = '#1a8f4c';
-      btn.style.borderColor = '#1a8f4c';
-      contactForm.reset();
+    const data = new FormData(contactForm);
+    data.append('action', 'ferreteria_contact');
+    data.append('nonce', ferreteriaAjax.nonce);
 
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.disabled  = false;
-        btn.style.background = '';
-        btn.style.borderColor = '';
-      }, 4000);
-    }, 1400);
+    fetch(ferreteriaAjax.url, { method: 'POST', body: data })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          btn.innerHTML = '<i class="fas fa-circle-check"></i> ¡Mensaje enviado!';
+          btn.style.background = '#1a8f4c';
+          btn.style.borderColor = '#1a8f4c';
+          contactForm.reset();
+          setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.disabled  = false;
+            btn.style.background = '';
+            btn.style.borderColor = '';
+          }, 4000);
+        } else {
+          btn.innerHTML = '<i class="fas fa-circle-xmark"></i> Error al enviar';
+          btn.style.background = '#c41e1e';
+          btn.style.borderColor = '#c41e1e';
+          btn.disabled = false;
+          setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+            btn.style.borderColor = '';
+          }, 4000);
+        }
+      })
+      .catch(() => {
+        btn.innerHTML = '<i class="fas fa-circle-xmark"></i> Error al enviar';
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.background = '';
+          btn.style.borderColor = '';
+        }, 3000);
+      });
   });
 }
 

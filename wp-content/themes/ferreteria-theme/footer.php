@@ -14,13 +14,10 @@ if (! defined('ABSPATH')) {
           <div class="footer-brand-name">MS <span>Metal</span> Santiago</div>
           <p class="footer-tagline">Ferretería y Construcciones Metálicas a Medida<br>Santiago del Estero</p>
           <div class="footer-social">
-            <a href="https://instagram.com/metal.santiago" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href="<?php echo esc_url(get_option('ms_instagram', '#')); ?>" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://tiktok.com/@metal.santiago" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-              <i class="fab fa-tiktok"></i>
-            </a>
-            <a href="https://wa.me/+549XXXXXXXXXX" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <a href="<?php echo ferreteria_wa_url(); ?>" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
           </div>
@@ -53,7 +50,7 @@ if (! defined('ABSPATH')) {
     </div>
   </footer>
 
-  <a href="https://wa.me/+549XXXXXXXXXX" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+  <a href="<?php echo ferreteria_wa_url(); ?>" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
 

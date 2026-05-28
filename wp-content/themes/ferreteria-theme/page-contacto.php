@@ -58,8 +58,8 @@ get_header();
               <div class="contact-item-icon"><i class="fab fa-whatsapp"></i></div>
               <div class="contact-item-body">
                 <h4>WhatsApp</h4>
-                <a href="https://wa.me/+549XXXXXXXXXX" target="_blank" rel="noopener noreferrer">
-                  +54 9 385 XXX-XXXX
+                <a href="<?php echo ferreteria_wa_url(); ?>" target="_blank" rel="noopener noreferrer">
+                  <?php echo esc_html(get_option('ms_whatsapp', '+54 9 385 XXX-XXXX')); ?>
                 </a>
                 <p style="font-size:.82rem;color:var(--color-text-muted);margin-top:.25rem;">
                   Lunes a sábados de 8 a 18 hs
@@ -71,8 +71,8 @@ get_header();
               <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
               <div class="contact-item-body">
                 <h4>Correo electrónico</h4>
-                <a href="mailto:contacto@msmetalsantiago.com.ar">
-                  contacto@msmetalsantiago.com.ar
+                <a href="mailto:<?php echo esc_attr(get_option('ms_email', 'contacto@msmetalsantiago.com.ar')); ?>">
+                  <?php echo esc_html(get_option('ms_email', 'contacto@msmetalsantiago.com.ar')); ?>
                 </a>
               </div>
             </div>
@@ -84,11 +84,8 @@ get_header();
               <div class="contact-item-body">
                 <h4>Redes sociales</h4>
                 <div class="social-row">
-                  <a href="https://instagram.com/metal.santiago" class="social-pill" target="_blank" rel="noopener noreferrer">
+                  <a href="<?php echo esc_url(get_option('ms_instagram', '#')); ?>" class="social-pill" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-instagram"></i> @Metal.santiago
-                  </a>
-                  <a href="https://tiktok.com/@metal.santiago" class="social-pill" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-tiktok"></i> @Metal.santiago
                   </a>
                 </div>
               </div>

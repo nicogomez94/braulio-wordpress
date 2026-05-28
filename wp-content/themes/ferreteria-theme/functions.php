@@ -51,6 +51,11 @@ function ferreteria_theme_assets(): void
         filemtime(get_template_directory() . '/assets/main.js'),
         true
     );
+
+    wp_localize_script('ferreteria-theme-main', 'ferreteriaAjax', array(
+        'url'   => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('ferreteria_contact_nonce'),
+    ));
 }
 add_action('wp_enqueue_scripts', 'ferreteria_theme_assets');
 
@@ -273,3 +278,121 @@ function ferreteria_theme_default_checkout_state(string $value): string
 }
 add_filter('default_checkout_billing_state', 'ferreteria_theme_default_checkout_state');
 add_filter('default_checkout_shipping_state', 'ferreteria_theme_default_checkout_state');
+
+/* =====================================================
+   DATOS DE CONTACTO
+   Ajustes → Datos de contacto
+   ===================================================== */
+
+function ferreteria_wa_url(): string
+{
+    $number = get_option('ms_whatsapp', '');
+    if (! $number) {
+        return '#';
+    }
+    return esc_url('https://wa.me/' . preg_replace('/[^0-9]/', '', $number));
+}
+
+function ferreteria_contact_options_page(): void
+{
+    add_options_page(
+        'Datos de contacto',
+        'Datos de contacto',
+        'manage_options',
+        'ferreteria-contacto',
+        'ferreteria_contact_options_render'
+    );
+}
+add_action('admin_menu', 'ferreteria_contact_options_page');
+
+function ferreteria_contact_options_init(): void
+{
+    register_setting('ferreteria_contacto', 'ms_whatsapp', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_text_field',
+        'default'           => '',
+    ));
+    register_setting('ferreteria_contacto', 'ms_email', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'sanitize_email',
+        'default'           => '',
+    ));
+    register_setting('ferreteria_contacto', 'ms_instagram', array(
+        'type'              => 'string',
+        'sanitize_callback' => 'esc_url_raw',
+        'default'           => '',
+    ));
+}
+add_action('admin_init', 'ferreteria_contact_options_init');
+
+function ferreteria_contact_options_render(): void
+{
+    if (! current_user_can('manage_options')) {
+        return;
+    }
+    ?>
+    <div class="wrap">
+        <h1>Datos de contacto</h1>
+        <form method="post" action="options.php">
+            <?php settings_fields('ferreteria_contacto'); ?>
+            <table class="form-table">
+                <tr>
+                    <th><label for="ms_whatsapp">WhatsApp (número)</label></th>
+                    <td>
+                        <input type="text" id="ms_whatsapp" name="ms_whatsapp" value="<?php echo esc_attr(get_option('ms_whatsapp')); ?>" class="regular-text" placeholder="+549385XXXXXXX">
+                        <p class="description">Formato internacional. Ej: +549385XXXXXXX</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ms_email">Email de contacto</label></th>
+                    <td>
+                        <input type="email" id="ms_email" name="ms_email" value="<?php echo esc_attr(get_option('ms_email')); ?>" class="regular-text" placeholder="contacto@msmetalsantiago.com.ar">
+                        <p class="description">A este correo llegan los mensajes del formulario.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="ms_instagram">Instagram (URL)</label></th>
+                    <td>
+                        <input type="url" id="ms_instagram" name="ms_instagram" value="<?php echo esc_attr(get_option('ms_instagram')); ?>" class="regular-text" placeholder="https://instagram.com/usuario">
+                    </td>
+                </tr>
+            </table>
+            <?php submit_button('Guardar cambios'); ?>
+        </form>
+    </div>
+    <?php
+}
+
+/* =====================================================
+   AJAX: Formulario de contacto
+   ===================================================== */
+
+function ferreteria_contact_form_handler(): void
+{
+    check_ajax_referer('ferreteria_contact_nonce', 'nonce');
+
+    $nombre   = sanitize_text_field(wp_unslash($_POST['nombre'] ?? ''));
+    $email    = sanitize_email(wp_unslash($_POST['email'] ?? ''));
+    $telefono = sanitize_text_field(wp_unslash($_POST['telefono'] ?? ''));
+    $asunto   = sanitize_text_field(wp_unslash($_POST['asunto'] ?? ''));
+    $mensaje  = sanitize_textarea_field(wp_unslash($_POST['mensaje'] ?? ''));
+
+    if (empty($nombre) || empty($email) || empty($mensaje) || ! is_email($email)) {
+        wp_send_json_error('Datos inválidos.');
+    }
+
+    $to      = get_option('ms_email', get_option('admin_email'));
+    $subject = 'Nueva consulta de ' . $nombre . ' — MS Metal Santiago';
+    $body    = "Nombre: {$nombre}\nEmail: {$email}\nTeléfono: {$telefono}\nConsulta: {$asunto}\n\n{$mensaje}";
+    $headers = array('Content-Type: text/plain; charset=UTF-8', "Reply-To: {$nombre} <{$email}>");
+
+    $sent = wp_mail($to, $subject, $body, $headers);
+
+    if ($sent) {
+        wp_send_json_success('Mensaje enviado.');
+    } else {
+        wp_send_json_error('No se pudo enviar el mensaje.');
+    }
+}
+add_action('wp_ajax_ferreteria_contact', 'ferreteria_contact_form_handler');
+add_action('wp_ajax_nopriv_ferreteria_contact', 'ferreteria_contact_form_handler');
