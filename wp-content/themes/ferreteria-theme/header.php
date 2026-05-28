@@ -20,7 +20,7 @@ if (! defined('ABSPATH')) {
   <nav class="navbar" role="navigation" aria-label="Navegación principal">
     <div class="navbar-inner">
       <a href="<?php echo ferreteria_theme_url('/'); ?>" class="navbar-logo" aria-label="MS Metal Santiago - Inicio">
-        <div class="logo-badge">MS</div>
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/logo.svg" alt="MS Metal Santiago del Estero" class="logo-img">
         <span class="logo-text">Metal <span>Santiago</span></span>
       </a>
 

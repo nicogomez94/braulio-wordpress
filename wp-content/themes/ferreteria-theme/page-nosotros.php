@@ -18,7 +18,7 @@ get_header();
     </nav>
     <h1 class="page-hero-title" id="page-title">Sobre Nosotros</h1>
     <p class="page-hero-sub">
-      Somos MS Metal Santiago — ferretería y taller metálico en el corazón del barrio Industria.
+      Somos MS Metal Santiago — ferretería y taller de construcciones metálicas con más de 30 años de experiencia.
     </p>
   </header>
 

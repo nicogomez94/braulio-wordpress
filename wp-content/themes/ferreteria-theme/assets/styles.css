@@ -82,19 +82,10 @@ h1, h2, h3, h4, h5 {
   gap: 0.6rem;
   text-decoration: none;
 }
-.logo-badge {
-  width: 2.2rem;
-  height: 2.2rem;
-  background: var(--color-red);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-white);
-  letter-spacing: 0;
+.logo-img {
+  height: 3rem;
+  width: auto;
+  display: block;
   flex-shrink: 0;
 }
 .logo-text {
@@ -226,33 +217,10 @@ h1, h2, h3, h4, h5 {
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 50%;
 }
-.hero-badge-ms {
-  font-family: var(--font-display);
-  font-size: 6rem;
-  font-weight: 700;
-  color: var(--color-red);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  display: block;
-}
-.hero-badge-metal {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  color: rgba(255,255,255,0.3);
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  display: block;
-  margin-top: 0.1rem;
-}
-.hero-badge-sub {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  color: var(--color-red);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  display: block;
-  margin-top: 0.3rem;
-  opacity: 0.8;
+.hero-badge-logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
 }
 .hero-eyebrow {
   font-family: var(--font-display);

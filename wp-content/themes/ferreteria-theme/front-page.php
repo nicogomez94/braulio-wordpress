@@ -22,8 +22,7 @@ get_header();
           <span class="accent">Construcciones</span>
         </h1>
         <p class="hero-subtitle">
-          Materiales, herramientas y soluciones para tu obra o proyecto.
-          Calidad garantizada, atención personalizada desde el barrio Industria.
+          Vendemos artículos de ferretería y contamos con más de 30 años de experiencia en la fabricación de estructuras metálicas para cada necesidad.
         </p>
         <div class="hero-ctas">
           <a href="#categorias" class="btn btn-primary">
@@ -38,9 +37,7 @@ get_header();
       <!-- Columna derecha: badge decorativo -->
       <div class="hero-right" aria-hidden="true">
         <div class="hero-badge">
-          <span class="hero-badge-ms">MS</span>
-          <span class="hero-badge-metal">METAL</span>
-          <span class="hero-badge-sub">Santiago</span>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/logo.svg" alt="MS Metal Santiago del Estero" class="hero-badge-logo">
         </div>
       </div>
 
