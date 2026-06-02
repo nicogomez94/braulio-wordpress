@@ -34,6 +34,7 @@ if (! defined('ABSPATH')) {
           <li><a href="<?php echo ferreteria_theme_url('/nosotros/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('nosotros'))); ?>">Nosotros</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/categorias/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('categorias'))); ?>">Categorías</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/tienda/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('tienda'))); ?>">Tienda</a></li>
+          <li><a href="<?php echo ferreteria_theme_url('/mayorista/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('mayorista'))); ?>">Mayorista</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/carrito/'); ?>" class="<?php echo esc_attr(trim(ferreteria_theme_is_active('carrito'))); ?>">Carrito</a></li>
           <li><a href="<?php echo ferreteria_theme_url('/contacto/'); ?>" class="btn-nav<?php echo esc_attr(ferreteria_theme_is_active('contacto')); ?>">Cotizar</a></li>
         </ul>
